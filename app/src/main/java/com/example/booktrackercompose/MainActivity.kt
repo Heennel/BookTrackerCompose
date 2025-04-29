@@ -11,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.booktrackercompose.screens.search.SearchResults
-import com.example.booktrackercompose.screens.search.SearchStatus
 import com.example.booktrackercompose.screens.search.TopTextField
 import com.example.booktrackercompose.screens.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +35,11 @@ class MainActivity : ComponentActivity() {
                     value = query,
                     onChangeValue = viewModel::onChangeQuery
                 )
-                SearchResults(bookList, searchStatus)
+                SearchResults(
+                    books = bookList,
+                    searchStatus = searchStatus,
+                    onClick = viewModel::onRestoreButtonClick
+                    )
             }
         }
     }

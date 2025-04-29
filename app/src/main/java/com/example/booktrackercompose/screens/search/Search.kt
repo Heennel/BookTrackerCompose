@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -138,12 +140,12 @@ fun TopTextField(
 
 
 @Composable
-fun SearchResults(books: List<Book>, searchStatus: SearchStatus){
+fun SearchResults(books: List<Book>, searchStatus: SearchStatus, onClick: () -> Unit){
     when(searchStatus){
         SearchStatus.SUCCESS -> SuccessBookList(books)
-        SearchStatus.LOADING -> {ProgressBar()}
+        SearchStatus.LOADING -> ProgressBar()
         SearchStatus.NOT_FOUND -> NotFound()
-        SearchStatus.ERROR -> Error()
+        SearchStatus.ERROR -> Error(onClick)
         else -> {}
     }
 }
@@ -164,10 +166,10 @@ private fun ProgressBar(){
 }
 
 @Composable
-private fun Error(){
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
+private fun Error(onClick: () -> Unit){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth().fillMaxHeight(0.4f)
     ) {
         Text(
@@ -180,6 +182,26 @@ private fun Error(){
                 )
             )
         )
+        Button(
+            onClick = onClick,
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.lightBlue)
+            ),
+            modifier = Modifier.padding(top = 12.dp)
+        ) {
+            Text(
+                text = "Попробовать снова",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.appBlack),
+                    fontFamily = FontFamily(
+                        Font(R.font.opensans_regular)
+                    )
+                ),
+                modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+            )
+        }
     }
 }
 

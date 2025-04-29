@@ -3,7 +3,6 @@ package com.example.booktrackercompose.screens.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import android.util.Log
 import com.example.booktrackercompose.api.Book
 import com.example.booktrackercompose.api.BookResponse
 import com.example.booktrackercompose.api.GoogleBooksApi
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -65,7 +63,7 @@ class SearchViewModel @Inject constructor(
                 }
                 .debounce(300)
                 .distinctUntilChanged()
-                .filter { it.isNotBlank() }
+                .filter { it.isNotBlank()}
                 .flatMapLatest { query ->
                     searchBook(query)
                 }
@@ -104,6 +102,10 @@ class SearchViewModel @Inject constructor(
 
     private fun changeSearchStatus(newSearchStatus: SearchStatus){
         _searchStatus.value = newSearchStatus
+    }
+
+    fun onRestoreButtonClick(){
+        searchEngine()
     }
 
     companion object{
