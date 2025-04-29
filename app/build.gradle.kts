@@ -46,8 +46,10 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.coil.kt.coil.compose)
     implementation(libs.hilt.android)
+    implementation(libs.volley)
+    implementation(libs.androidx.media3.common.ktx)
     ksp(libs.hilt.android.compiler)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)

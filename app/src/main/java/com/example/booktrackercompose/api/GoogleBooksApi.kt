@@ -1,4 +1,4 @@
-package com.example.booktrackercompose
+package com.example.booktrackercompose.api
 
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,5 +1,6 @@
-package com.example.booktrackercompose
+package com.example.booktrackercompose.modules
 
+import com.example.booktrackercompose.api.GoogleBooksApi
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -59,7 +60,7 @@ class Module {
     @Singleton
     fun providesApi(
         retrofit: Retrofit
-    ): GoogleBooksApi{
+    ): GoogleBooksApi {
         return retrofit.create<GoogleBooksApi>()
     }
 
