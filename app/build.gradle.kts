@@ -46,6 +46,9 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.androidx.navigation.compose)
+
     implementation(libs.coil.kt.coil.compose)
     implementation(libs.hilt.android)
     implementation(libs.volley)
