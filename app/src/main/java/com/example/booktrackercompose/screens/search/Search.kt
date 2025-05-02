@@ -46,26 +46,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.booktrackercompose.R
 import com.example.booktrackercompose.api.Book
 
-
 @Composable
 fun SeachScreen(){
-    SearchScreen(viewModel = viewModel())
+    val viewModel: SearchViewModel = hiltViewModel()
+    SearchScreen(viewModel)
 }
 
 @Composable
-
 private fun SearchScreen(viewModel: SearchViewModel){
     val query by viewModel.searchQuery.collectAsState()
     val bookList by viewModel.bookList.collectAsState()
     val searchStatus by viewModel.searchStatus.collectAsState()
 
-    Column(
-        modifier = Modifier.systemBarsPadding()
-    ) {
+    Column{
         TopTextField(
             value = query,
             onChangeValue = viewModel::onChangeQuery
@@ -90,7 +88,7 @@ fun TopTextField(
 
     Row(
         modifier = Modifier
-            .padding(top = 24.dp)
+            .padding(top = 16.dp)
             .padding(horizontal = 16.dp)
             .border(
                 width = 1.dp,
