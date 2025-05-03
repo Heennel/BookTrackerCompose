@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +23,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,9 +47,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.booktrackercompose.R
 import com.example.booktrackercompose.api.Book
+
+
+
 
 @Composable
 fun SeachScreen(){
@@ -63,7 +65,8 @@ private fun SearchScreen(viewModel: SearchViewModel){
     val bookList by viewModel.bookList.collectAsState()
     val searchStatus by viewModel.searchStatus.collectAsState()
 
-    Column{
+    Column(
+    ){
         TopTextField(
             value = query,
             onChangeValue = viewModel::onChangeQuery
@@ -76,13 +79,12 @@ private fun SearchScreen(viewModel: SearchViewModel){
     }
 }
 
-
 @Composable
 fun TopTextField(
     value: String,
     onChangeValue: (String) -> Unit
 ){
-
+    val colorScheme = MaterialTheme.colorScheme
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -93,7 +95,7 @@ fun TopTextField(
             .border(
                 width = 1.dp,
                 shape = RoundedCornerShape(5.dp),
-                color = colorResource(R.color.grayDivider)
+                color = colorScheme.tertiary
             ),
         verticalAlignment = Alignment.CenterVertically
     ){
@@ -104,7 +106,8 @@ fun TopTextField(
             Image(
                 painter = painterResource(R.drawable.search_img),
                 contentDescription = "Поиск",
-                modifier = Modifier.padding(start = 10.dp).size(22.dp)
+                modifier = Modifier.padding(start = 10.dp).size(22.dp),
+                colorFilter = ColorFilter.tint(colorScheme.primary)
             )
 
             Spacer(
@@ -124,7 +127,7 @@ fun TopTextField(
                     fontFamily = FontFamily(
                         Font(R.font.inter_regular)
                     ),
-                    color = colorResource(R.color.appBlack)
+                    color = colorScheme.primary
                 ),
                 decorationBox = { innerTextField ->
                     if (value.isBlank()){
@@ -182,6 +185,7 @@ fun SearchResults(books: List<Book>, searchStatus: SearchStatus, onClick: () -> 
 
 @Composable
 private fun ProgressBar(){
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -189,7 +193,7 @@ private fun ProgressBar(){
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(32.dp),
-            color = colorResource(R.color.appBlack),
+            color = colorScheme.primary,
             strokeWidth = 3.dp
         )
     }
@@ -197,6 +201,9 @@ private fun ProgressBar(){
 
 @Composable
 private fun Error(onClick: () -> Unit){
+
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -206,7 +213,7 @@ private fun Error(onClick: () -> Unit){
             text = "Проблемы с соединением...",
             style = TextStyle(
                 fontSize = 22.sp,
-                color = colorResource(R.color.appBlack),
+                color = colorScheme.primary,
                 fontFamily = FontFamily(
                     Font(R.font.opensans_regular)
                 )
@@ -216,7 +223,7 @@ private fun Error(onClick: () -> Unit){
             onClick = onClick,
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.lightBlue)
+                containerColor = colorScheme.onPrimary
             ),
             modifier = Modifier.padding(top = 12.dp)
         ) {
@@ -224,7 +231,7 @@ private fun Error(onClick: () -> Unit){
                 text = "Попробовать снова",
                 style = TextStyle(
                     fontSize = 16.sp,
-                    color = colorResource(R.color.appBlack),
+                    color = colorScheme.primary,
                     fontFamily = FontFamily(
                         Font(R.font.opensans_regular)
                     )
@@ -237,6 +244,7 @@ private fun Error(onClick: () -> Unit){
 
 @Composable
 private fun NotFound(){
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -246,7 +254,7 @@ private fun NotFound(){
             text = "Ничего не найдено =(",
             style = TextStyle(
                 fontSize = 22.sp,
-                color = colorResource(R.color.appBlack),
+                color = colorScheme.primary,
                 fontFamily = FontFamily(
                     Font(R.font.opensans_regular)
                 )
@@ -257,6 +265,7 @@ private fun NotFound(){
 
 @Composable
 private fun SuccessBookList(books: List<Book>){
+    val colorScheme = MaterialTheme.colorScheme
     LazyColumn(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -283,7 +292,7 @@ private fun SuccessBookList(books: List<Book>){
                         maxLines = 1,
                         style = TextStyle(
                             fontSize = 16.sp,
-                            color = colorResource(R.color.appBlack),
+                            color = colorScheme.primary,
                             fontFamily = FontFamily(
                                 Font(R.font.opensans_regular)
                             ),
@@ -310,7 +319,7 @@ private fun SuccessBookList(books: List<Book>){
                         maxLines = 1,
                         style = TextStyle(
                             fontSize = 15.sp,
-                            color = colorResource(R.color.appBlack),
+                            color = colorScheme.primary,
                             fontFamily = FontFamily(
                                 Font(R.font.opensans_regular)
                             )

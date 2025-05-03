@@ -3,6 +3,7 @@ package com.example.booktrackercompose.screens.library
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -11,6 +12,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun Library(){
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -18,7 +20,8 @@ fun Library(){
     ) {
         Text(
             text = "БИБЛИОТЕКА",
-            fontSize = 30.sp
+            fontSize = 30.sp,
+            color = colorScheme.primary
         )
     }
 }
