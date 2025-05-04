@@ -1,5 +1,6 @@
 package com.example.booktrackercompose.screens.settings
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -34,13 +38,25 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.booktrackercompose.R
+
 
 @Composable
 fun SettingsScreen(){
+    val viewModel: SettingsViewModel = hiltViewModel()
+    SettingsScreen(viewModel)
+}
 
-    val isChecked = remember { mutableStateOf(false) }
+@Composable
+fun SettingsScreen(
+    viewModel: SettingsViewModel
+){
+    val switchValue by viewModel.isDarkTheme
+    val onClickSwitch = viewModel::setDarkTheme
     val colorScheme = MaterialTheme.colorScheme
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -73,13 +89,16 @@ fun SettingsScreen(){
                 )
             )
             Switch(
-                checked = isChecked.value,
-                onCheckedChange = {isChecked.value = it},
+                checked = switchValue,
+                onCheckedChange = onClickSwitch,
                 modifier = Modifier.scale(0.65f)
             )
         }
         Button(
-            onClick = {},
+            onClick = {
+                val intent = viewModel.getShareIntent()
+                context.startActivity(intent)
+            },
             modifier = Modifier.padding(16.dp)
                 .fillMaxWidth()
                 .border(
@@ -118,7 +137,10 @@ fun SettingsScreen(){
             }
         }
         Button(
-            onClick = {},
+            onClick = {
+                val intent = viewModel.getEmailIntent()
+                context.startActivity(intent)
+            },
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth()
                 .border(

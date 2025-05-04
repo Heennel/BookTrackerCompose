@@ -47,12 +47,16 @@ android {
 
 dependencies {
 
+    implementation(libs.datastore.preferences.v100)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.navigation.compose.v288)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.coil.kt.coil.compose)
     implementation(libs.hilt.android)
     implementation(libs.volley)
     implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.appcompat)
     ksp(libs.hilt.android.compiler)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)

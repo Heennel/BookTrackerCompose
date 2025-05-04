@@ -267,7 +267,7 @@ private fun NotFound(){
 private fun SuccessBookList(books: List<Book>){
     val colorScheme = MaterialTheme.colorScheme
     LazyColumn(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp)
     ) {
         items(books){ item ->
             Row(
