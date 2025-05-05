@@ -53,7 +53,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel
 ){
     val switchValue by viewModel.isDarkTheme
-    val onClickSwitch = viewModel::setDarkTheme
     val colorScheme = MaterialTheme.colorScheme
 
     val context = LocalContext.current
@@ -90,7 +89,9 @@ fun SettingsScreen(
             )
             Switch(
                 checked = switchValue,
-                onCheckedChange = onClickSwitch,
+                onCheckedChange = { enabled ->
+                    viewModel.setDarkTheme(enabled)
+                },
                 modifier = Modifier.scale(0.65f)
             )
         }
