@@ -11,4 +11,5 @@
     <color name="redBackground">#FFE5E5</color>
     <color name="redText">#FF4C4C</color>
     <color name="grayDivider">#dddddd</color>
+    <color name="red">#ff2400</color>
 </resources>

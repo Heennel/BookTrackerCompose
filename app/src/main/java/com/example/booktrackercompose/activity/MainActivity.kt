@@ -35,5 +35,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("!!!","Привет")
+    }
 }
 

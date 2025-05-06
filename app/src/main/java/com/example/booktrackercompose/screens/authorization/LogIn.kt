@@ -25,7 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,30 +44,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.booktrackercompose.R
 
 
 @Composable
-fun Authoriation(){
-    val queryMail = remember { mutableStateOf("") }
-    val queryPassword = remember { mutableStateOf("") }
-
-    MainLobby(
-        valueMail = queryMail.value,
-        onValueChangeMail = {queryMail.value = it},
-        valuePass = queryPassword.value,
-        onValueChangePas = {queryPassword.value = it}
+fun LogInScreen(){
+    LogInScreen(
+        viewModel = hiltViewModel()
     )
-
 }
-
 @Composable
-private fun MainLobby(
-    valueMail: String,
-    onValueChangeMail: (String) -> Unit,
-    valuePass: String,
-    onValueChangePas: (String) -> Unit,
+private fun LogInScreen(
+    viewModel: LogInViewModel
 ){
+
+    val email by viewModel.email
+    val password by viewModel.password
+
+    val emailUpdater = viewModel::updateEmail
+    val passwordUpdater = viewModel::updatePassword
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         WelcomeMessage()
@@ -109,15 +106,31 @@ private fun MainLobby(
                 .padding(top = 20.dp)
                 .fillMaxWidth()
         ) {
-            CreateTextField(valueMail,onValueChangeMail, "Ваша электронная почта"
-                ,painterResource(R.drawable.mail_img))
-            CreateTextField(valuePass,onValueChangePas, "Ваш пароль"
-                , painterResource(R.drawable.lock_img))
+            CreateTextField(
+                value = email,
+                onValueChange = emailUpdater,
+                basicText = "Ваша электронная почта",
+                image = painterResource(R.drawable.mail_img),
+                viewModel = viewModel,
+                isEmailField = true
+            )
+            CreateTextField(
+                value = password,
+                onValueChange = passwordUpdater,
+                basicText = "Ваш пароль",
+                image = painterResource(R.drawable.lock_img),
+                viewModel = viewModel,
+                isPasswordField = true
+            )
         }
 
         Button(
-            onClick = {},
-            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 12.dp)
+            onClick = {
+                viewModel.auth()
+            },
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(top = 12.dp)
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.lessLightBlue),
@@ -140,7 +153,7 @@ private fun MainLobby(
 }
 
 @Composable
-private fun AuthorizationButton(){ //если захочу добавить еще кнопок, обновлю входные параметры
+private fun AuthorizationButton(){
     Button(
         onClick = {},
         shape = RoundedCornerShape(15.dp),
@@ -208,90 +221,158 @@ private fun WelcomeMessage(){
     }
 }
 
-
 @Composable
 private fun CreateTextField(
     value: String,
     onValueChange: (String) -> Unit,
     basicText: String,
-    image: Painter
+    image: Painter,
+    isPasswordField: Boolean = false,
+    isEmailField: Boolean = false,
+    viewModel: LogInViewModel
 ){
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-    Row(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .padding(top = 8.dp)
-            .border(
-                width = 1.dp,
-                color = colorResource(R.color.grayDivider),
-                shape = RoundedCornerShape(8.dp)
-            ),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Box(
+
+    val correctPassword by viewModel.isPasswordValid
+    val correctMail by viewModel.isEmailValid
+
+    Column{
+        Row(
             modifier = Modifier
-                .weight(1f)
-        ) {
-            Row(
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp)
+                .border(
+                    color = if((!correctPassword && isPasswordField)
+                        || (!correctMail && isEmailField)
+                    )
+                        colorResource(R.color.red)
+                    else colorResource(R.color.grayDivider),
+                    width = 1.dp,
+                    shape = RoundedCornerShape(8.dp),
+
+                    ),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Box(
                 modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .weight(1f)
             ) {
-                Image(
-                    painter = image,
-                    contentDescription = "Пароль",
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                BasicTextField(
-                    value = value,
-                    onValueChange = onValueChange,
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester),
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.inter_regular)),
-                        fontSize = 16.sp,
-                        color = colorResource(R.color.appBlack)
-                    ),
-                    decorationBox = { innerTextField ->
-                        if (value.isEmpty()) {
-                            Text(
-                                text = basicText,
-                                color = colorResource(R.color.gray),
-                                fontSize = 16.sp,
-                                fontFamily = FontFamily(Font(R.font.inter_regular))
-                            )
-                        }
-                        innerTextField()
-                    },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                        }
-                    ),
+                        .padding(horizontal = 12.dp, vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = image,
+                        contentDescription = "Пароль",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    BasicTextField(
+                        value = value,
+                        onValueChange = onValueChange,
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(focusRequester),
+                        textStyle = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.inter_regular)),
+                            fontSize = 16.sp,
+                            color = colorResource(R.color.appBlack)
+                        ),
+                        decorationBox = { innerTextField ->
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = basicText,
+                                    color = colorResource(R.color.gray),
+                                    fontSize = 16.sp,
+                                    fontFamily = FontFamily(Font(R.font.inter_regular))
+                                )
+                            }
+                            innerTextField()
+                        },
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                            }
+                        ),
+                    )
+                }
+            }
+            if(value.isNotBlank()) {
+                Image(
+                    painter = painterResource(R.drawable.edit_text_clear_img),
+                    contentDescription = "Стереть",
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(24.dp)
+                        .clickable(
+                            onClick = { onValueChange("") },
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
                 )
             }
         }
-        if(value.isNotBlank()) {
-            Image(
-                painter = painterResource(R.drawable.edit_text_clear_img),
-                contentDescription = "Стереть",
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(24.dp)
-                    .clickable(
-                        onClick = { onValueChange("") },
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    )
+        if(isPasswordField && !correctPassword){
+            Text(
+                modifier = Modifier.padding(start = 20.dp),
+                text = "6 и более символов",
+                style = TextStyle(
+                    fontFamily = FontFamily(
+                        Font(R.font.opensans_regular)
+                    ),
+                    fontSize = 12.sp,
+                    color = colorResource(R.color.redText)
+                )
             )
         }
+    }
+}
+
+@Composable
+private fun SignUpButton(
+    viewModel: LogInViewModel
+){
+
+    val isAllValid by viewModel.isAllValid
+
+
+    Button(
+        onClick = viewModel::auth,
+        enabled = isAllValid,
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 12.dp)
+            .fillMaxWidth(),
+
+        colors = if (isAllValid) {
+            ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.lessLightBlue),
+                contentColor = Color.White,
+            )
+        } else {
+            ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.gray),
+                contentColor = colorResource(R.color.appBlack)
+            )
+        },
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Text(
+            modifier = Modifier.padding(vertical = 8.dp),
+            text = "Создать аккаунт",
+            style = TextStyle(
+                fontFamily = FontFamily(
+                    Font(R.font.inter_bold)
+                ),
+                fontSize = 16.sp
+            )
+        )
     }
 }

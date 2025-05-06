@@ -59,7 +59,6 @@ fun BottomNavigationBar(navController: NavController) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-
         Spacer(
             Modifier.fillMaxWidth().height(1.dp).background(colorScheme.secondary)
         )
