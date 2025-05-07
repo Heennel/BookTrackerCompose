@@ -50,7 +50,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun BookTrackerComposeTheme(
-    darkTheme: Boolean = isDarkMode(),
+    darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
@@ -66,10 +66,4 @@ fun BookTrackerComposeTheme(
             content()
         }
     }
-}
-
-@Composable
-private fun isDarkMode() = when(AppCompatDelegate.getDefaultNightMode()){
-    AppCompatDelegate.MODE_NIGHT_NO -> false
-    else -> true
 }

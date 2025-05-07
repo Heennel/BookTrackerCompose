@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.booktrackercompose.R
 import com.example.booktrackercompose.api.Book
 
@@ -54,13 +55,13 @@ import com.example.booktrackercompose.api.Book
 
 
 @Composable
-fun SeachScreen(){
+fun SeachScreen(navController: NavController){
     val viewModel: SearchViewModel = hiltViewModel()
-    SearchScreen(viewModel)
+    SearchScreen(viewModel, navController)
 }
 
 @Composable
-private fun SearchScreen(viewModel: SearchViewModel){
+private fun SearchScreen(viewModel: SearchViewModel, navController: NavController){
     val query by viewModel.searchQuery.collectAsState()
     val bookList by viewModel.bookList.collectAsState()
     val searchStatus by viewModel.searchStatus.collectAsState()

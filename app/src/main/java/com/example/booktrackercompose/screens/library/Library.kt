@@ -26,10 +26,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.booktrackercompose.R
 
 @Composable
-fun Library(){
+fun Library(navController: NavController){
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier.fillMaxWidth(),

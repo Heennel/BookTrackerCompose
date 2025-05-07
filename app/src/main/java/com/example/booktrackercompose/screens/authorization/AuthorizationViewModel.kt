@@ -32,12 +32,6 @@ abstract class AuthorizationViewModel: ViewModel() {
         updateValidation()
     }
 
-    fun updatePassword(value: String) {
-        _password.value = value
-        _isPasswordValid.value = value.length >= 6 || value.isEmpty()
-        updateValidation()
-    }
-
     protected abstract fun updateValidation()
 
     protected fun isValidEmail(email: String): Boolean {

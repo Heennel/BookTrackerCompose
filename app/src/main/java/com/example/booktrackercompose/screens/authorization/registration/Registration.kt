@@ -1,4 +1,4 @@
-package com.example.booktrackercompose.screens.authorization
+package com.example.booktrackercompose.screens.authorization.registration
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,16 +43,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.booktrackercompose.R
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.booktrackercompose.navigation.Screen
 
 @Composable
-fun RegistrationScreen(){
+fun RegistrationScreen(navController: NavController){
     RegistrationScreen(
-        viewModel = hiltViewModel()
+        viewModel = hiltViewModel(),
+        navController = navController
     )
 }
 
 @Composable
-private fun RegistrationScreen(viewModel: RegistrationViewModel){
+private fun RegistrationScreen(viewModel: RegistrationViewModel, navController: NavController){
 
     Column {
         val queryMail by viewModel.email
@@ -83,7 +87,7 @@ private fun RegistrationScreen(viewModel: RegistrationViewModel){
             isMatchField = true,
             viewModel = viewModel
         )
-        SignUpButton(viewModel)
+        SignUpButton(viewModel,navController)
     }
 }
 
@@ -238,11 +242,19 @@ private fun CreateTextField(
 
 @Composable
 private fun SignUpButton(
-    viewModel: RegistrationViewModel
+    viewModel: RegistrationViewModel,
+    navController: NavController
 ){
 
     val isAllValid by viewModel.isAllValid
+    val navigationFlag by viewModel.navigateFlag
 
+    LaunchedEffect(navigationFlag) {
+        if(navigationFlag) {
+            viewModel.dropFlag()
+            navController.navigate(Screen.LogIn.route)
+        }
+    }
 
     Button(
         onClick = viewModel::sign,

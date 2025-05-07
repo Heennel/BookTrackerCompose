@@ -14,19 +14,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    @ApplicationContext val context: Context
 ) : ViewModel() {
-
-    private val app = context.applicationContext as App
-
-    private val sharedPreferences = context.getSharedPreferences("BookTrackerCompose",Context.MODE_PRIVATE)
-
-    private val _isDarkTheme = mutableStateOf(sharedPreferences.getBoolean("THEME_KEY", false))
+    private val _isDarkTheme = mutableStateOf(false)
     val isDarkTheme: State<Boolean> = _isDarkTheme
 
     fun setDarkTheme(enabled: Boolean) {
         _isDarkTheme.value = enabled
-        app.changeTheme(enabled)
     }
 
     fun getEmailIntent(): Intent {

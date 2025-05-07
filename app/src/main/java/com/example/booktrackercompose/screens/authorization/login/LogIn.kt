@@ -1,4 +1,4 @@
-package com.example.booktrackercompose.screens.authorization
+package com.example.booktrackercompose.screens.authorization.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,18 +46,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.booktrackercompose.R
+import com.example.booktrackercompose.navigation.Screen
 
 
 @Composable
-fun LogInScreen(){
+fun LogInScreen(navController: NavController){
     LogInScreen(
-        viewModel = hiltViewModel()
+        viewModel = hiltViewModel(),
+        navController = navController
     )
 }
 @Composable
 private fun LogInScreen(
-    viewModel: LogInViewModel
+    viewModel: LogInViewModel,
+    navController: NavController
 ){
 
     val email by viewModel.email
@@ -64,6 +69,15 @@ private fun LogInScreen(
 
     val emailUpdater = viewModel::updateEmail
     val passwordUpdater = viewModel::updatePassword
+
+    val navigationFlag by viewModel.navigateFlag
+
+    LaunchedEffect(navigationFlag) {
+        if(navigationFlag) {
+            viewModel.dropFlag()
+            navController.navigate(Screen.Library.route)
+        }
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -234,7 +248,6 @@ private fun CreateTextField(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-
     val correctPassword by viewModel.isPasswordValid
     val correctMail by viewModel.isEmailValid
 
@@ -335,44 +348,3 @@ private fun CreateTextField(
     }
 }
 
-@Composable
-private fun SignUpButton(
-    viewModel: LogInViewModel
-){
-
-    val isAllValid by viewModel.isAllValid
-
-
-    Button(
-        onClick = viewModel::auth,
-        enabled = isAllValid,
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .padding(top = 12.dp)
-            .fillMaxWidth(),
-
-        colors = if (isAllValid) {
-            ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.lessLightBlue),
-                contentColor = Color.White,
-            )
-        } else {
-            ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.gray),
-                contentColor = colorResource(R.color.appBlack)
-            )
-        },
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = "Создать аккаунт",
-            style = TextStyle(
-                fontFamily = FontFamily(
-                    Font(R.font.inter_bold)
-                ),
-                fontSize = 16.sp
-            )
-        )
-    }
-}
